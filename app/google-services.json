@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "154963856519",
+    "project_id": "shop-69b3d",
+    "storage_bucket": "shop-69b3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154963856519:android:25fd5ccec16ce5e058fc22",
+        "android_client_info": {
+          "package_name": "com.rick.shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp60CC_t798xNIXXx94SYgJxPMWhf9S_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
