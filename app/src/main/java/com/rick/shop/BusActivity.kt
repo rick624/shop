@@ -16,12 +16,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
+import retrofit2.http.GET
 import java.net.URL
 
 class BusActivity : AppCompatActivity() {
     private val TAG = BusActivity::class.java.simpleName
     private lateinit var binding: ActivityBusBinding
     var buses : List<BusItem>? = null
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://data.tycg.gov.tw/opendata/datalist/datasetMeta/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +42,13 @@ class BusActivity : AppCompatActivity() {
     
     private fun busTask() = GlobalScope.launch(Dispatchers.Main) {
         withContext(Dispatchers.IO) {
-            val json = URL("https://data.tycg.gov.tw/opendata/datalist/datasetMeta/download?id=b3abedf0-aeae-4523-a804-6e807cbad589&rid=bf55b21a-2b7c-4ede-8048-f75420344aed").readText()
+//            val json = URL("https://data.tycg.gov.tw/opendata/datalist/datasetMeta/download?id=b3abedf0-aeae-4523-a804-6e807cbad589&rid=bf55b21a-2b7c-4ede-8048-f75420344aed").readText()
 //            val buses = Gson().fromJson(json, Bus::class.java).datas
-            buses = Gson().fromJson(json, Bus::class.java).datas
+//            buses = Gson().fromJson(json, Bus::class.java).datas
+            val busService = retrofit.create(BusService::class.java)
+            buses = busService.listBus()
+                .execute()
+                .body()?.datas
             buses?.forEach {
                 Log.d(TAG, "busTask: ${it.BusID} ${it.RouteID} ${it.Speed}")
             }
@@ -98,3 +111,9 @@ data class BusItem(
     val ledstate: String,
     val sections: String
 )
+
+interface BusService {
+    @GET("download?id=b3abedf0-aeae-4523-a804-6e807cbad589&rid=bf55b21a-2b7c-4ede-8048-f75420344aed")
+//    fun listBus(): Call<List<BusItem>>
+    fun listBus(): Call<Bus>
+}
